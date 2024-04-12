@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS Nomination (
     month varchar(20),
     criticID int,
     restaurantID int,
-    PRIMARY KEY(criticID, restaurantID),
+    PRIMARY KEY(month, criticID, restaurantID),
     CONSTRAINT fk_14
         FOREIGN KEY (criticID) REFERENCES Critic(criticID)
             ON UPDATE restrict ON DELETE restrict,
