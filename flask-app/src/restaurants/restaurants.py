@@ -11,7 +11,7 @@ def get_restaurants():
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT name, cuisine, address, website, openingTime, closingTime FROM Restaurant')
+    cursor.execute('SELECT name, cuisine, address, website, openingTime, closingTime, images FROM Restaurant')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]

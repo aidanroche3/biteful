@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS Review (
     price int,
     rating int,
     images varchar(100),
+    restaurantID int NOT NULL,
     reviewID int PRIMARY KEY
 );
 
