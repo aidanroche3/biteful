@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS ReviewFlags (
     reviewID int,
     ownerID int,
     adminID int,
-    PRIMARY KEY(ownerID, reviewID, adminID),
+    PRIMARY KEY(ownerID, reviewID),
     CONSTRAINT fk_9
         FOREIGN KEY (ownerID) REFERENCES Owner(ownerID)
                                ON UPDATE restrict ON DELETE restrict,
