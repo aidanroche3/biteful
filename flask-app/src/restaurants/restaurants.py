@@ -11,7 +11,7 @@ def get_restaurants():
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT name, cuisine, address, website, openingTime, closingTime FROM Restaurant')
+    cursor.execute('SELECT name, cuisine, address, website, openingTime, closingTime, images FROM Restaurant')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -28,4 +28,85 @@ def get_restaurants():
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
 
+    return jsonify(json_data)
+
+@restaurants.route('/restaurants/<id>', methods=['GET'])
+def get_restaurants_detail (id):
+    cursor = db.get_db().cursor()
+    query = '''
+        SELECT *
+        FROM restaurants
+        WHERE id = %s
+    '''
+    cursor.execute(query, (id,))
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    the_data = cursor.fetchall()
+    if the_data:
+        json_data.append(dict(zip(column_headers, the_data[0])))
+    else:
+        return jsonify({"error": "Restaurant not found"}), 404
+    return jsonify(json_data)
+
+@restaurants.route('/restaurants', methods=['POST'])
+def add_restaurant():
+    data = request.json
+    query = '''
+        INSERT INTO restaurans (name, location, cuisine, price _level)
+        VALUES (%s, %s, %s, %s)
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (data['name'], data['location'], data['cuisine'], data['price_level']))
+    db.get_db().commit()
+    return jsonify({"success": True}), 201
+
+@restaurants.route('/restaurants/<id>', methods=['PUT'])
+def update_restaurant(id):
+    data = request.json
+    query = '''
+        UPDATE restaurans
+        SET name = %s, location = %s, cuisine = %s, price_level = %s
+        WHERE id = %s
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (data['name'], data['location'], data['cuisine'], data['price_level'], id))
+    if cursor.rowcount == 0:
+        return jsonify({"error": "Update failed or restaurant not found"}), 404
+    db.get_db().commit()
+    return jsonify({"success": True}), 201
+        
+    
+@restaurants.route('/restaurants/<id>', methods=['DELETE'])
+def delete_restaurant(id):
+    cursor = db.get_db().cursor()
+    query = '''
+        DELETE FROM restaurants
+        WHERE id = %s
+    '''
+    cursor.execute(query, (id,))
+    db.get_db().commit()
+    if cursor.rowcount > 0:
+        return jsonify({"success": True}), 201
+    else:
+        return jsonify({"error": "Delete failed or restaurant not found"}), 404
+    
+@restaurants.route('/restaurants/search', methods=['GET'])
+def search_restaurants():
+    #get search term for query parameters
+    search_term = request.args.get('query', '')
+    if not search_term:
+        return jsonify({"error": "No search term provided"}), 400
+    life_string = f"%{search_term}%"
+    cursor = db.get_db().cursor()
+    query = '''
+        SELECT *
+        FROM restaurants
+        WHERE name LIKE %s OR location LIKE %s OR cuisine LIKE %s
+    '''
+    cursor.execute(query, (life_string, life_string, life_string))
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    the_data = cursor.fetchall()
+    for row in the_data:
+        json_data.append(dict(zip(column_headers, row)))
     return jsonify(json_data)
