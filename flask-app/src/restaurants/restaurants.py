@@ -30,7 +30,6 @@ def get_restaurants():
             json_data.append(dict(zip(column_headers, row)))
     else :
         return jsonify({"error": "Restaurant not found"}), 404
-
     return jsonify(json_data)
 
 @restaurants.route('/restaurants/<id>', methods=['GET'])
@@ -55,11 +54,11 @@ def get_restaurants_detail(id):
 def add_restaurant():
     data = request.json
     query = '''
-        INSERT INTO restaurants (name, location, cuisine, price _level)
+        INSERT INTO restaurants (name, location, cuisine, openingTime, closingTime, phoneNumber, dineIn, website, address)
         VALUES (%s, %s, %s, %s)
     '''
     cursor = db.get_db().cursor()
-    cursor.execute(query, (data['name'], data['location'], data['cuisine'], data['price_level']))
+    cursor.execute(query, (data['name'], data['location'], data['cuisine'], data['openingTime'], data['closingTime'], data['phoneNumber'], data['dineIn'], data['website'], data['address']))
     db.get_db().commit()
     return jsonify({"success": True}), 201
 
@@ -68,11 +67,11 @@ def update_restaurant(id):
     data = request.json
     query = '''
         UPDATE restaurants
-        SET name = %s, location = %s, cuisine = %s, price_level = %s
-        WHERE id = %s
+        SET openingTime = %s, closingTime = %s, phoneNumber = %s, dineIn = %s, website = %s
+        WHERE restaurantID = %s
     '''
     cursor = db.get_db().cursor()
-    cursor.execute(query, (data['name'], data['location'], data['cuisine'], data['price_level'], id))
+    cursor.execute(query, (data['openingTime'], data['closingTime'], data['phoneNumber'], data['dineIn'], data['website'], id))
     if cursor.rowcount == 0:
         return jsonify({"error": "Update failed or restaurant not found"}), 404
     db.get_db().commit()
@@ -84,7 +83,7 @@ def delete_restaurant(id):
     cursor = db.get_db().cursor()
     query = '''
         DELETE FROM restaurants
-        WHERE id = %s
+        WHERE restaurantID = %s
     '''
     cursor.execute(query, (id,))
     db.get_db().commit()
@@ -104,7 +103,7 @@ def search_restaurants():
     query = '''
         SELECT *
         FROM restaurants
-        WHERE name LIKE %s OR location LIKE %s OR cuisine LIKE %s
+        WHERE name LIKE %s OR address LIKE %s OR cuisine LIKE %s
     '''
     cursor.execute(query, (life_string, life_string, life_string))
     column_headers = [x[0] for x in cursor.description]
