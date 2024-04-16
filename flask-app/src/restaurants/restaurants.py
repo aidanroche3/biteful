@@ -55,7 +55,7 @@ def add_restaurant():
     data = request.json
     query = '''
         INSERT INTO restaurants (name, cuisine, openingTime, closingTime, phoneNumber, takeout, dineIn, website, address, adminID)
-        VALUES (%s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     '''
     cursor = db.get_db().cursor()
     cursor.execute(query, (data['name'], data['cuisine'], data['openingTime'], data['closingTime'], data['phoneNumber'], data['takeout'], data['dineIn'], data['website'], data['address'], data['adminID']))
