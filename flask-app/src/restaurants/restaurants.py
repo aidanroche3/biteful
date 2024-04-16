@@ -25,9 +25,11 @@ def get_restaurants():
 
     # for each of the rows, zip the data elements together with
     # the column headers. 
-    for row in theData:
-        json_data.append(dict(zip(column_headers, row)))
-
+    if theData :
+        for row in theData:
+            json_data.append(dict(zip(column_headers, row)))
+    else :
+        return jsonify({"error": "Restaurant not found"}), 404
     return jsonify(json_data)
 
 @restaurants.route('/restaurants/<id>', methods=['GET'])
@@ -52,11 +54,11 @@ def get_restaurants_detail(id):
 def add_restaurant():
     data = request.json
     query = '''
-        INSERT INTO restaurans (name, location, cuisine, price _level)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO Restaurant (name, cuisine, openingTime, closingTime, phoneNumber, takeout, dineIn, website, address, adminID)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     '''
     cursor = db.get_db().cursor()
-    cursor.execute(query, (data['name'], data['location'], data['cuisine'], data['price_level']))
+    cursor.execute(query, (data['name'], data['cuisine'], data['openingTime'], data['closingTime'], data['phoneNumber'], data['takeout'], data['dineIn'], data['website'], data['address'], data['adminID']))
     db.get_db().commit()
     return jsonify({"success": True}), 201
 
@@ -64,12 +66,12 @@ def add_restaurant():
 def update_restaurant(id):
     data = request.json
     query = '''
-        UPDATE restaurans
-        SET name = %s, location = %s, cuisine = %s, price_level = %s
-        WHERE id = %s
+        UPDATE Restaurant
+        SET openingTime = %s, closingTime = %s, phoneNumber = %s, dineIn = %s, website = %s
+        WHERE restaurantID = %s
     '''
     cursor = db.get_db().cursor()
-    cursor.execute(query, (data['name'], data['location'], data['cuisine'], data['price_level'], id))
+    cursor.execute(query, (data['openingTime'], data['closingTime'], data['phoneNumber'], data['dineIn'], data['website'], id))
     if cursor.rowcount == 0:
         return jsonify({"error": "Update failed or restaurant not found"}), 404
     db.get_db().commit()
@@ -80,8 +82,8 @@ def update_restaurant(id):
 def delete_restaurant(id):
     cursor = db.get_db().cursor()
     query = '''
-        DELETE FROM restaurants
-        WHERE id = %s
+        DELETE FROM Restaurant
+        WHERE restaurantID = %s
     '''
     cursor.execute(query, (id,))
     db.get_db().commit()
@@ -100,8 +102,8 @@ def search_restaurants():
     cursor = db.get_db().cursor()
     query = '''
         SELECT *
-        FROM restaurants
-        WHERE name LIKE %s OR location LIKE %s OR cuisine LIKE %s
+        FROM Restaurant
+        WHERE name LIKE %s OR address LIKE %s OR cuisine LIKE %s
     '''
     cursor.execute(query, (life_string, life_string, life_string))
     column_headers = [x[0] for x in cursor.description]
