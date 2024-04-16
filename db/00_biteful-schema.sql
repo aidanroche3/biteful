@@ -32,12 +32,12 @@ CREATE TABLE IF NOT EXISTS Restaurant (
     cuisine varchar(50),
     address varchar(100),
     images varchar(100),
-    restaurantID int PRIMARY KEY,
+    restaurantID int AUTO_INCREMENT PRIMARY KEY,
     adminID int,
 
     CONSTRAINT fk_1
         FOREIGN KEY (adminID) REFERENCES Administrator(adminID)
-            ON UPDATE restrict ON DELETE restrict
+            ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE IF NOT EXISTS Bookmark (
@@ -47,10 +47,10 @@ CREATE TABLE IF NOT EXISTS Bookmark (
 
     CONSTRAINT fk_2
         FOREIGN KEY (restaurantID) REFERENCES Restaurant(restaurantID)
-        ON UPDATE RESTRICT ON DELETE RESTRICT,
+        ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT fk_3
         FOREIGN KEY (dinerID) REFERENCES Diner(dinerID)
-        ON UPDATE RESTRICT ON DELETE RESTRICT
+        ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE IF NOT EXISTS MenuItem (
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS MenuItem (
 
     CONSTRAINT fk_4
         FOREIGN KEY (restaurantID) REFERENCES Restaurant(restaurantID)
-            ON UPDATE restrict ON DELETE restrict
+            ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE IF NOT EXISTS Review (
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS Review (
     rating int,
     images varchar(100),
     restaurantID int NOT NULL,
-    reviewID int PRIMARY KEY
+    reviewID int AUTO_INCREMENT PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS ReviewDetails (
@@ -91,10 +91,10 @@ CREATE TABLE IF NOT EXISTS ReviewDetails (
     PRIMARY KEY(dinerID, reviewID),
     CONSTRAINT fk_5
         FOREIGN KEY (dinerID) REFERENCES Diner(dinerID)
-            ON UPDATE restrict ON DELETE restrict,
+            ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT fk_6
         FOREIGN KEY (reviewID) REFERENCES Review(reviewID)
-            ON UPDATE restrict ON DELETE restrict
+            ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE IF NOT EXISTS Owner (
@@ -111,10 +111,10 @@ CREATE TABLE IF NOT EXISTS OwnerDetails (
     PRIMARY KEY(ownerID, restaurantID),
     CONSTRAINT fk_7
         FOREIGN KEY (ownerID) REFERENCES Owner(ownerID)
-            ON UPDATE restrict ON DELETE restrict,
+            ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT fk_8
         FOREIGN KEY (restaurantID) REFERENCES Restaurant(restaurantID)
-            ON UPDATE restrict ON DELETE restrict
+            ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE IF NOT EXISTS ReviewFlags (
@@ -127,13 +127,13 @@ CREATE TABLE IF NOT EXISTS ReviewFlags (
     PRIMARY KEY(ownerID, reviewID),
     CONSTRAINT fk_9
         FOREIGN KEY (ownerID) REFERENCES Owner(ownerID)
-                               ON UPDATE restrict ON DELETE restrict,
+                               ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT fk_10
         FOREIGN KEY (reviewID) REFERENCES Review(reviewID)
-                               ON UPDATE restrict ON DELETE restrict,
+                               ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT fk_11
         FOREIGN KEY (adminID) REFERENCES Administrator(adminID)
-                               ON UPDATE restrict ON DELETE restrict
+                               ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE IF NOT EXISTS Critic (
@@ -151,10 +151,10 @@ CREATE TABLE IF NOT EXISTS Curation (
     PRIMARY KEY(reviewID, criticID),
     CONSTRAINT fk_12
         FOREIGN KEY (reviewID) REFERENCES Review(reviewID)
-            ON UPDATE restrict ON DELETE restrict,
+            ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT fk_13
         FOREIGN KEY (criticID) REFERENCES Critic(criticID)
-            ON UPDATE restrict ON DELETE restrict
+            ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE IF NOT EXISTS Nomination (
@@ -164,9 +164,9 @@ CREATE TABLE IF NOT EXISTS Nomination (
     PRIMARY KEY(month, criticID, restaurantID),
     CONSTRAINT fk_14
         FOREIGN KEY (criticID) REFERENCES Critic(criticID)
-            ON UPDATE restrict ON DELETE restrict,
+            ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT fk_15
         FOREIGN KEY (restaurantID) REFERENCES Restaurant(restaurantID)
-            ON UPDATE restrict ON DELETE restrict
+            ON UPDATE cascade ON DELETE cascade
 );
        

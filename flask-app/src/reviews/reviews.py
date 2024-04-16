@@ -47,17 +47,15 @@ def add_new_review(restaurant_id):
     price = the_data['price']
     rating = the_data['rating']
     images = the_data['images']
-    reviewID = the_data['reviewID']
     dinerID = the_data['dinerID']
 
     # Constructing the query
-    query = 'insert into Review (text, price, rating, images, restaurantID, reviewID) values ("'
+    query = 'INSERT INTO Review (text, price, rating, images, restaurantID) VALUES ("'
     query += text + '", "'
     query += str(price) + '", "'
     query += str(rating) + '", "'
-    query += images + '", "'
-    query += str(restaurant_id) + '", "'
-    query += str(reviewID) + '")'
+    query += images + '", '
+    query += str(restaurant_id) + ')'
     current_app.logger.info(query)
 
     # executing and committing the insert statement 
@@ -65,10 +63,23 @@ def add_new_review(restaurant_id):
     cursor.execute(query)
     db.get_db().commit()
 
+    query = 'SELECT reviewID FROM Review WHERE text = %s AND restaurantID = %s'
+    cursor.execute(query, (text, restaurant_id,))
+
+    # grab the column headers from the returned data
+    column_headers = [x[0] for x in cursor.description]
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchone()
+
+    json_data = dict(zip(column_headers, theData))
+
+    reviewID = json_data["reviewID"]
+
     # Constructing the query
-    query = 'insert into ReviewDetails (reviewID, dinerID) values ("'
-    query += str(reviewID) + '", "'
-    query += str(dinerID) + '")'
+    query = 'INSERT INTO ReviewDetails (reviewID, dinerID) VALUES ('
+    query += str(reviewID) + ', '
+    query += str(dinerID) + ')'
     current_app.logger.info(query)
 
     # executing and committing the insert statement 
@@ -147,7 +158,7 @@ def get_average_rating(restaurant_id):
     cursor.execute(query, (restaurant_id,))
     result = cursor.fetchone()
     if result:
-        return jsonify({"average_rating": int(result[0])})
+        return jsonify({"average_rating": str(int(result[0]))})
     else:
         return jsonify({"error": "No reviews found"}), 404
 
