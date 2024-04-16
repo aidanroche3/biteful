@@ -5,18 +5,20 @@ from src import db
 
 restaurants = Blueprint('restaurants', __name__)
 
+
 @restaurants.route('/restaurants', methods=['GET'])
 def get_restaurants():
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT name, cuisine, address, website, openingTime, closingTime, images, restaurantID FROM Restaurant')
+    cursor.execute(
+        'SELECT name, cuisine, address, website, openingTime, closingTime, images, restaurantID FROM Restaurant')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
 
-    # create an empty dictionary object to use in 
+    # create an empty dictionary object to use in
     # putting column headers together with data
     json_data = []
 
@@ -24,13 +26,14 @@ def get_restaurants():
     theData = cursor.fetchall()
 
     # for each of the rows, zip the data elements together with
-    # the column headers. 
-    if theData :
+    # the column headers.
+    if theData:
         for row in theData:
             json_data.append(dict(zip(column_headers, row)))
-    else :
+    else:
         return jsonify({"error": "Restaurant not found"}), 404
     return jsonify(json_data)
+
 
 @restaurants.route('/restaurants/<id>', methods=['GET'])
 def get_restaurants_detail(id):
@@ -50,17 +53,21 @@ def get_restaurants_detail(id):
         return jsonify({"error": "Restaurant not found"}), 404
     return jsonify(json_data)
 
+
 @restaurants.route('/restaurants', methods=['POST'])
 def add_restaurant():
     data = request.json
+    # print(data)
     query = '''
         INSERT INTO Restaurant (name, cuisine, openingTime, closingTime, phoneNumber, takeout, dineIn, website, address, adminID)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     '''
     cursor = db.get_db().cursor()
-    cursor.execute(query, (data['name'], data['cuisine'], data['openingTime'], data['closingTime'], data['phoneNumber'], data['takeout'], data['dineIn'], data['website'], data['address'], data['adminID']))
+    cursor.execute(query, (data['name'], data['cuisine'], data['openingTime'], data['closingTime'],
+                   data['phoneNumber'], data['takeout'], data['dineIn'], data['website'], data['address'], data['adminID']))
     db.get_db().commit()
     return jsonify({"success": True}), 201
+
 
 @restaurants.route('/restaurants/<id>', methods=['PUT'])
 def update_restaurant(id):
@@ -71,13 +78,14 @@ def update_restaurant(id):
         WHERE restaurantID = %s
     '''
     cursor = db.get_db().cursor()
-    cursor.execute(query, (data['openingTime'], data['closingTime'], data['phoneNumber'], data['dineIn'], data['website'], id))
+    cursor.execute(query, (data['openingTime'], data['closingTime'],
+                   data['phoneNumber'], data['dineIn'], data['website'], id))
     if cursor.rowcount == 0:
         return jsonify({"error": "Update failed or restaurant not found"}), 404
     db.get_db().commit()
     return jsonify({"success": True}), 201
-        
-    
+
+
 @restaurants.route('/restaurants/<id>', methods=['DELETE'])
 def delete_restaurant(id):
     cursor = db.get_db().cursor()
@@ -91,10 +99,11 @@ def delete_restaurant(id):
         return jsonify({"success": True}), 201
     else:
         return jsonify({"error": "Delete failed or restaurant not found"}), 404
-    
+
+
 @restaurants.route('/restaurants/search', methods=['GET'])
 def search_restaurants():
-    #get search term for query parameters
+    # get search term for query parameters
     search_term = request.args.get('query', '')
     if not search_term:
         return jsonify({"error": "No search term provided"}), 400
