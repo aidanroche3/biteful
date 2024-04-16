@@ -52,10 +52,8 @@ def get_restaurants_detail(id):
 
 @restaurants.route('/restaurants', methods=['POST'])
 def add_restaurant():
-
-
     query = 'SELECT adminID FROM Administrator ORDER BY RAND() LIMIT 1'
-    cursor.execute(query, (text, restaurant_id,))
+    cursor.execute(query)
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
