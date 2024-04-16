@@ -143,19 +143,19 @@ def delete_review():
 @reviews.route('/reviews/average/<restaurant_id>', methods=['GET'])
 def get_average_rating(restaurant_id):
     cursor = db.get_db().cursor()
-    query = 'SELECT AVG(rating) as average_rating FROM reviews WHERE restaurant_id = %s'
+    query = 'SELECT AVG(rating) as average_rating FROM Review WHERE restaurantID = %s'
     cursor.execute(query, (restaurant_id,))
     result = cursor.fetchone()
     if result:
-        return jsonify({"average_rating": float(result['average_rating']) if result['average_rating'] else None})
+        return jsonify({"average_rating": int(result[0])})
     else:
         return jsonify({"error": "No reviews found"}), 404
 
 # Get the most recent review for a specific restaurant
-@reviews.route('/reviews/recent/<int:restaurant_id>', methods=['GET'])
+@reviews.route('/reviews/recent/<restaurant_id>', methods=['GET'])
 def get_most_recent_review(restaurant_id):
     cursor = db.get_db().cursor()
-    query = 'SELECT * FROM reviews WHERE restaurant_id = %s ORDER BY created_at DESC LIMIT 1'
+    query = 'SELECT * FROM Review WHERE restaurantID = %s ORDER BY timeStamp DESC LIMIT 1'
     cursor.execute(query, (restaurant_id,))
     column_headers = [x[0] for x in cursor.description]
     review_data = cursor.fetchone()
