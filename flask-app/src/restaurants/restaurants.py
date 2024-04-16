@@ -54,11 +54,11 @@ def get_restaurants_detail(id):
 def add_restaurant():
     data = request.json
     query = '''
-        INSERT INTO restaurants (name, location, cuisine, openingTime, closingTime, phoneNumber, dineIn, website, address)
+        INSERT INTO restaurants (name, cuisine, openingTime, closingTime, phoneNumber, dineIn, website, address)
         VALUES (%s, %s, %s, %s)
     '''
     cursor = db.get_db().cursor()
-    cursor.execute(query, (data['name'], data['location'], data['cuisine'], data['openingTime'], data['closingTime'], data['phoneNumber'], data['dineIn'], data['website'], data['address']))
+    cursor.execute(query, (data['name'], data['cuisine'], data['openingTime'], data['closingTime'], data['phoneNumber'], data['dineIn'], data['website'], data['address']))
     db.get_db().commit()
     return jsonify({"success": True}), 201
 
