@@ -16,8 +16,11 @@ def get_flags (review_id):
     column_headers = [x[0] for x in cursor.description]
     json_data = []
     the_data = cursor.fetchall()
-    for row in the_data:
-        json_data.append(dict(zip(column_headers, row)))
+    if the_data :
+        for row in the_data:
+            json_data.append(dict(zip(column_headers, row)))
+    else :
+        return jsonify({"error": "Review not found"}), 404
     return jsonify(json_data)
 
 @flags.route('/flags/<review_id>', methods=['POST'])

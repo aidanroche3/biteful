@@ -25,8 +25,11 @@ def get_restaurants():
 
     # for each of the rows, zip the data elements together with
     # the column headers. 
-    for row in theData:
-        json_data.append(dict(zip(column_headers, row)))
+    if theData :
+        for row in theData:
+            json_data.append(dict(zip(column_headers, row)))
+    else :
+        return jsonify({"error": "Restaurant not found"}), 404
 
     return jsonify(json_data)
 
@@ -52,7 +55,7 @@ def get_restaurants_detail (id):
 def add_restaurant():
     data = request.json
     query = '''
-        INSERT INTO restaurans (name, location, cuisine, price _level)
+        INSERT INTO restaurants (name, location, cuisine, price _level)
         VALUES (%s, %s, %s, %s)
     '''
     cursor = db.get_db().cursor()
@@ -64,7 +67,7 @@ def add_restaurant():
 def update_restaurant(id):
     data = request.json
     query = '''
-        UPDATE restaurans
+        UPDATE restaurants
         SET name = %s, location = %s, cuisine = %s, price_level = %s
         WHERE id = %s
     '''
