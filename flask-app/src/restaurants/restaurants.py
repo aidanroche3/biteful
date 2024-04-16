@@ -57,6 +57,7 @@ def get_restaurants_detail(id):
 @restaurants.route('/restaurants', methods=['POST'])
 def add_restaurant():
     query = 'SELECT adminID FROM Administrator ORDER BY RAND() LIMIT 1'
+    cursor = db.get_db().cursor()
     cursor.execute(query)
 
     # grab the column headers from the returned data
@@ -75,7 +76,6 @@ def add_restaurant():
         INSERT INTO Restaurant (name, cuisine, openingTime, closingTime, phoneNumber, takeout, dineIn, website, address, adminID)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     '''
-    cursor = db.get_db().cursor()
     cursor.execute(query, (data['name'], data['cuisine'], data['openingTime'], data['closingTime'],
                    data['phoneNumber'], data['takeout'], data['dineIn'], data['website'], data['address'], adminID))
     db.get_db().commit()
