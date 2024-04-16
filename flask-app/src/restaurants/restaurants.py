@@ -54,7 +54,7 @@ def get_restaurants_detail(id):
 def add_restaurant():
     data = request.json
     query = '''
-        INSERT INTO restaurants (name, cuisine, openingTime, closingTime, phoneNumber, takeout, dineIn, website, address, adminID)
+        INSERT INTO Restaurants (name, cuisine, openingTime, closingTime, phoneNumber, takeout, dineIn, website, address, adminID)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     '''
     cursor = db.get_db().cursor()
@@ -66,7 +66,7 @@ def add_restaurant():
 def update_restaurant(id):
     data = request.json
     query = '''
-        UPDATE restaurants
+        UPDATE Restaurants
         SET openingTime = %s, closingTime = %s, phoneNumber = %s, dineIn = %s, website = %s
         WHERE restaurantID = %s
     '''
@@ -82,7 +82,7 @@ def update_restaurant(id):
 def delete_restaurant(id):
     cursor = db.get_db().cursor()
     query = '''
-        DELETE FROM restaurants
+        DELETE FROM Restaurants
         WHERE restaurantID = %s
     '''
     cursor.execute(query, (id,))
@@ -102,7 +102,7 @@ def search_restaurants():
     cursor = db.get_db().cursor()
     query = '''
         SELECT *
-        FROM restaurants
+        FROM Restaurants
         WHERE name LIKE %s OR address LIKE %s OR cuisine LIKE %s
     '''
     cursor.execute(query, (life_string, life_string, life_string))
