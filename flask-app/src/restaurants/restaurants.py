@@ -56,6 +56,19 @@ def get_restaurants_detail(id):
 
 @restaurants.route('/restaurants', methods=['POST'])
 def add_restaurant():
+    query = 'SELECT adminID FROM Administrator ORDER BY RAND() LIMIT 1'
+    cursor.execute(query)
+
+    # grab the column headers from the returned data
+    column_headers = [x[0] for x in cursor.description]
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchone()
+
+    json_data = dict(zip(column_headers, theData))
+
+    adminID = json_data["adminID"]
+
     data = request.json
     # print(data)
     query = '''
@@ -64,7 +77,7 @@ def add_restaurant():
     '''
     cursor = db.get_db().cursor()
     cursor.execute(query, (data['name'], data['cuisine'], data['openingTime'], data['closingTime'],
-                   data['phoneNumber'], data['takeout'], data['dineIn'], data['website'], data['address'], data['adminID']))
+                   data['phoneNumber'], data['takeout'], data['dineIn'], data['website'], data['address'], adminID))
     db.get_db().commit()
     return jsonify({"success": True}), 201
 
