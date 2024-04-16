@@ -11,7 +11,7 @@ def get_restaurants():
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT name, cuisine, address, website, openingTime, closingTime, images FROM Restaurant')
+    cursor.execute('SELECT name, cuisine, address, website, openingTime, closingTime, images, restaurantID FROM Restaurant')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -31,12 +31,12 @@ def get_restaurants():
     return jsonify(json_data)
 
 @restaurants.route('/restaurants/<id>', methods=['GET'])
-def get_restaurants_detail (id):
+def get_restaurants_detail(id):
     cursor = db.get_db().cursor()
     query = '''
         SELECT *
-        FROM restaurants
-        WHERE id = %s
+        FROM Restaurant
+        WHERE restaurantID = %s
     '''
     cursor.execute(query, (id,))
     column_headers = [x[0] for x in cursor.description]
