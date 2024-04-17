@@ -10,7 +10,7 @@ def get_reviews(restaurant_id):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
-    query = 'SELECT firstName, lastName, text, timeStamp, price, rating, images '
+    query = 'SELECT Review.reviewID, firstName, lastName, text, timeStamp, price, rating, images '
     query += 'FROM Review JOIN ReviewDetails ON Review.reviewID = ReviewDetails.reviewID '
     query += 'JOIN Diner ON ReviewDetails.dinerID = Diner.dinerID '
     query += 'WHERE Review.restaurantID = ' + str(restaurant_id) 

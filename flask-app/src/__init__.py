@@ -39,6 +39,7 @@ def create_app():
     from src.flags.flags import flags
     from src.restaurants.restaurants import restaurants
     from src.reviews.reviews import reviews
+    from src.owner.owner import owners
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
@@ -46,6 +47,7 @@ def create_app():
     app.register_blueprint(flags,    url_prefix='/f')
     app.register_blueprint(restaurants,    url_prefix='/rst')
     app.register_blueprint(reviews,    url_prefix='/rv')
+    app.register_blueprint(owners,    url_prefix='/ow')
 
     # Don't forget to return the app object
     return app
