@@ -33,8 +33,6 @@ def create_app():
         return "<h1>Welcome to the 3200 boilerplate app</h1>"
 
     # Import the various Beluprint Objects
-    from src.customers.customers import customers
-    from src.products.products  import products
     from src.bookmarks.bookmarks import bookmarks
     from src.flags.flags import flags
     from src.restaurants.restaurants  import restaurants
@@ -42,8 +40,6 @@ def create_app():
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
-    app.register_blueprint(customers,   url_prefix='/c')
-    app.register_blueprint(products,    url_prefix='/p')
     app.register_blueprint(bookmarks,    url_prefix='/b')
     app.register_blueprint(flags,    url_prefix='/f')
     app.register_blueprint(restaurants,    url_prefix='/rst')
