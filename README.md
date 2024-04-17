@@ -16,6 +16,9 @@ Biteful is a user-centric hub connecting diners, restaurant owners, food critics
 1. Build the images with `docker compose build`
 1. Start the containers with `docker compose up`.  To run in detached mode, run `docker compose up -d`. 
 
-
-
-
+## Authors
+- [Aidan Roche](https://github.com/aidanroche3)
+- [Ethan Moskowitz](https://github.com/EthanMoskowitz)
+- [Ray Kong](https://github.com/Ray-kong)
+- [Matthew Tung](https://github.com/MatthewRTung)
+- [Daniel Rachev](https://github.com/stendeze)
