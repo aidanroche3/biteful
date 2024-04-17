@@ -6,14 +6,14 @@ from src import db
 restaurants = Blueprint('restaurants', __name__)
 
 
-@restaurants.route('/restaurants', methods=['GET'])
-def get_restaurants():
+@restaurants.route('/restaurants/approved/<approved>', methods=['GET'])
+def get_restaurants(approved):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
     cursor.execute(
-        'SELECT name, cuisine, address, website, openingTime, closingTime, images, restaurantID FROM Restaurant')
+        'SELECT name, cuisine, address, website, openingTime, closingTime, images, restaurantID FROM Restaurant WHERE approved = ' + approved)
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
