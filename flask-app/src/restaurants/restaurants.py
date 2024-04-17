@@ -98,6 +98,19 @@ def update_restaurant(id):
     db.get_db().commit()
     return jsonify({"success": True}), 201
 
+ # update approve status
+
+
+@restaurants.route('/restaurants/approve/<int:id>', methods=['PUT'])
+def approve_restaurant(id):
+    query = "UPDATE Restaurant SET approved = TRUE WHERE restaurantID = %s"
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (id,))
+    if cursor.rowcount == 0:
+        return jsonify({"error": "Restaurant not found"}), 404
+    db.get_db().commit()
+    return jsonify({"success": "Restaurant approved successfully"}), 200
+
 
 @restaurants.route('/restaurants/<id>', methods=['DELETE'])
 def delete_restaurant(id):
