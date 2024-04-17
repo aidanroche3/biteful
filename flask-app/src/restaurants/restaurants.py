@@ -87,12 +87,12 @@ def update_restaurant(id):
     data = request.json
     query = '''
         UPDATE Restaurant
-        SET openingTime = %s, closingTime = %s, phoneNumber = %s, dineIn = %s, website = %s
+        SET name = %s, cuisine = %s, openingTime = %s, closingTime = %s, phoneNumber = %s, address = %s, dineIn = %s, website = %s, takeout = %s
         WHERE restaurantID = %s
     '''
     cursor = db.get_db().cursor()
-    cursor.execute(query, (data['openingTime'], data['closingTime'],
-                   data['phoneNumber'], data['dineIn'], data['website'], id))
+    cursor.execute(query, (data['Name'], data['cuisine'], data['openingTime'], data['closingTime'],
+                   data['phoneNumber'], data['address'], data['dineIn'], data['website'], data['takeout'], id))
     if cursor.rowcount == 0:
         return jsonify({"error": "Update failed or restaurant not found"}), 404
     db.get_db().commit()
