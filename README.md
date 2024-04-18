@@ -6,6 +6,8 @@
 
 Biteful is a user-centric hub connecting diners, restaurant owners, food critics, and administrators. Diners can find, review, and receive recommendations for restaurants. Owners manage listings and engage with feedback, while critics contribute reviews and articles. Administrators oversee data integrity and platform enhancements, by moderating reviews and approving restaurants to the platform. With tailored features for each user, the platform aims to redefine dining experiences through transparency and community engagement, allowing users to find the best restaurants based on the cuisine, price, location, and reviews.
 
+[Video Demo](https://www.youtube.com/watch?v=camQAQ3V9Qg)
+
 ## How to setup and start the containers
 **Important** - you need Docker Desktop installed
 
